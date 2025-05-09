@@ -1,0 +1,822 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Resume Builder with Games
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Inter', sans-serif;
+    }
+    /* 3D Snake game styles */
+    #snake-game {
+      perspective: 800px;
+    }
+    #snake-canvas {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      border-radius: 12px;
+      box-shadow:
+        0 0 30px #0ff,
+        inset 0 0 40px #0ff;
+      transform-style: preserve-3d;
+      transform-origin: center center;
+      transition: transform 0.3s ease;
+      filter: drop-shadow(0 0 10px #0ff);
+    }
+    #snake-canvas:hover {
+      transform: rotateX(20deg) rotateY(20deg);
+    }
+    /* Tic Tac Toe 3D style */
+    .tic-tac-toe-cell {
+      perspective: 600px;
+      cursor: pointer;
+    }
+    .tic-tac-toe-inner {
+      width: 100%;
+      height: 100%;
+      background: #222;
+      border-radius: 8px;
+      box-shadow:
+        0 0 10px #555 inset,
+        0 0 15px #0af;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #0af;
+      font-weight: 700;
+      user-select: none;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+    }
+    .tic-tac-toe-inner.x {
+      color: #f33;
+      text-shadow: 0 0 10px #f33;
+      transform: rotateY(360deg);
+    }
+    .tic-tac-toe-inner.o {
+      color: #3af;
+      text-shadow: 0 0 10px #3af;
+      transform: rotateX(360deg);
+    }
+    /* Scrollbar for templates */
+    .templates-scroll::-webkit-scrollbar {
+      height: 8px;
+    }
+    .templates-scroll::-webkit-scrollbar-thumb {
+      background: #0af;
+      border-radius: 4px;
+    }
+    /* Stylish buttons for snake controls */
+    #snake-game button {
+      box-shadow:
+        0 0 8px #0ff,
+        0 0 20px #0ff inset;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    #snake-game button:hover:not(:disabled) {
+      background-color: #00ffffcc;
+      box-shadow:
+        0 0 15px #0ff,
+        0 0 30px #0ff inset;
+    }
+    #snake-game button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  </style>
+ </head>
+ <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col">
+  <header class="bg-gray-800 shadow-md p-4 flex items-center justify-between">
+   <h1 class="text-2xl font-semibold text-cyan-400">
+    Resume Builder &amp; Games
+   </h1>
+   <nav class="space-x-6 text-gray-300 hidden md:flex">
+    <a class="hover:text-cyan-400 transition" href="#resume-builder">
+     Resume Builder
+    </a>
+    <a class="hover:text-cyan-400 transition" href="#tic-tac-toe">
+     Tic Tac Toe
+    </a>
+    <a class="hover:text-cyan-400 transition" href="#snake-game">
+     Snake Game
+    </a>
+   </nav>
+   <button class="md:hidden text-cyan-400 focus:outline-none" id="mobile-menu-btn">
+    <i class="fas fa-bars fa-lg">
+    </i>
+   </button>
+  </header>
+  <nav class="bg-gray-800 text-gray-300 flex flex-col space-y-2 p-4 md:hidden hidden" id="mobile-menu">
+   <a class="hover:text-cyan-400 transition" href="#resume-builder">
+    Resume Builder
+   </a>
+   <a class="hover:text-cyan-400 transition" href="#tic-tac-toe">
+    Tic Tac Toe
+   </a>
+   <a class="hover:text-cyan-400 transition" href="#snake-game">
+    Snake Game
+   </a>
+  </nav>
+  <main class="flex-grow container mx-auto px-4 py-8 space-y-16">
+   <!-- Resume Builder Section -->
+   <section class="bg-gray-800 rounded-lg p-6 shadow-lg" id="resume-builder">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 text-center">
+     Resume Builder - 100+ Templates
+    </h2>
+    <div class="flex flex-col md:flex-row md:space-x-8">
+     <!-- Templates Sidebar -->
+     <aside class="md:w-1/4 mb-6 md:mb-0">
+      <h3 class="text-xl font-semibold mb-4 text-gray-300">
+       Select Template
+      </h3>
+      <div class="templates-scroll flex space-x-4 overflow-x-auto pb-2">
+       <img alt="Resume template 1 with modern blue and dark theme, clean layout with header and two columns" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="1" height="160" src="https://storage.googleapis.com/a1aa/image/5e008cb7-e396-4966-ea5e-590730276509.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 2 with dark navy background and cyan highlights, single column layout with profile picture" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="2" height="160" src="https://storage.googleapis.com/a1aa/image/93b1c8a6-0736-4d17-2c94-e0bb3e0014fe.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 3 with dark background and red accent, two column layout with skills and experience" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="3" height="160" src="https://storage.googleapis.com/a1aa/image/6751f287-e9c9-4960-3b10-a0570243745d.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 4 with black background and blue highlights, minimalistic style with large name header" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="4" height="160" src="https://storage.googleapis.com/a1aa/image/fb016a31-d93f-4f12-4817-472f620f2baf.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 5 with navy background and bright cyan text, clean two column layout with icons" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="5" height="160" src="https://storage.googleapis.com/a1aa/image/b4ac19a8-855c-46d7-5a71-2dad11429de1.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 6 with dark blue background and teal highlights, modern style with timeline for experience" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="6" height="160" src="https://storage.googleapis.com/a1aa/image/17148358-efc6-48c2-8237-ed5a8878ad62.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 7 with black background and red accent, bold headings and clean sections" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="7" height="160" src="https://storage.googleapis.com/a1aa/image/8cb0cc35-2938-4b8d-60ce-e50466ee5dde.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 8 with navy background and bright cyan highlights, two column layout with sidebar" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="8" height="160" src="https://storage.googleapis.com/a1aa/image/8c1ebee6-3e33-4602-456f-859bd8d3a64e.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 9 with dark blue background and teal text, minimal style with large icons" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="9" height="160" src="https://storage.googleapis.com/a1aa/image/1180ea96-2b6c-421f-a31e-18c7250b6742.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 10 with black background and cyan highlights, clean and modern layout with profile photo" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="10" height="160" src="https://storage.googleapis.com/a1aa/image/250e5cbd-8f08-40c0-966a-0a21cd103e50.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 11 with navy background and red accent, bold headings and timeline style" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="11" height="160" src="https://storage.googleapis.com/a1aa/image/b01166ba-656f-4229-2edb-7a63abd813c7.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 12 with dark background and bright cyan text, two column layout with skills sidebar" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="12" height="160" src="https://storage.googleapis.com/a1aa/image/b87e2447-b8cb-4e5a-2d00-7dca6f6197b7.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 13 with black background and teal highlights, minimalistic style with large name header" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="13" height="160" src="https://storage.googleapis.com/a1aa/image/53493229-2184-4503-d869-c822eedc735f.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 14 with navy background and bright cyan highlights, clean two column layout with icons" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="14" height="160" src="https://storage.googleapis.com/a1aa/image/b766c74b-898e-47e5-b8e9-6dba006dad30.jpg" tabindex="0" width="120"/>
+       <img alt="Resume template 15 with dark background and red accent, modern style with timeline for experience" class="w-24 h-32 rounded-lg cursor-pointer border-4 border-transparent hover:border-cyan-400 transition" data-template="15" height="160" src="https://storage.googleapis.com/a1aa/image/86a64a04-a2dc-492c-8e77-b2a8e398f536.jpg" tabindex="0" width="120"/>
+      </div>
+     </aside>
+     <!-- Resume Form and Preview -->
+     <div class="md:w-3/4 flex flex-col space-y-6">
+      <form class="bg-gray-900 p-6 rounded-lg shadow-inner space-y-6 max-h-[600px] overflow-y-auto" id="resume-form">
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+         <label class="block mb-1 font-semibold text-gray-300" for="fullName">
+          Full Name
+         </label>
+         <input class="w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400" id="fullName" name="fullName" placeholder="John Doe" required="" type="text"/>
+        </div>
+        <div>
+         <label class="block mb-1 font-semibold text-gray-300" for="email">
+          Email
+         </label>
+         <input class="w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400" id="email" name="email" placeholder="john@example.com" required="" type="email"/>
+        </div>
+        <div>
+         <label class="block mb-1 font-semibold text-gray-300" for="phone">
+          Phone
+         </label>
+         <input class="w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400" id="phone" name="phone" placeholder="+1 234 567 890" type="tel"/>
+        </div>
+        <div>
+         <label class="block mb-1 font-semibold text-gray-300" for="linkedin">
+          LinkedIn
+         </label>
+         <input class="w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/username" type="url"/>
+        </div>
+       </div>
+       <div>
+        <label class="block mb-1 font-semibold text-gray-300" for="summary">
+         Professional Summary
+        </label>
+        <textarea class="w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400 resize-none" id="summary" name="summary" placeholder="Briefly describe yourself and your career goals." rows="3"></textarea>
+       </div>
+       <div>
+        <label class="block mb-1 font-semibold text-gray-300" for="experience">
+         Work Experience
+        </label>
+        <textarea class="w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400 resize-none" id="experience" name="experience" placeholder="List your work experience, roles, and achievements." rows="4"></textarea>
+       </div>
+       <div>
+        <label class="block mb-1 font-semibold text-gray-300" for="education">
+         Education
+        </label>
+        <textarea class="w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400 resize-none" id="education" name="education" placeholder="List your educational background." rows="3"></textarea>
+       </div>
+       <div>
+        <label class="block mb-1 font-semibold text-gray-300" for="skills">
+         Skills
+        </label>
+        <input class="w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400" id="skills" name="skills" placeholder="e.g. JavaScript, React, Tailwind CSS" type="text"/>
+       </div>
+       <button class="w-full bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-semibold py-3 rounded-md transition" id="generate-resume" type="button">
+        Generate Resume Preview
+       </button>
+      </form>
+      <section aria-label="Resume preview" class="bg-gray-700 rounded-lg p-6 shadow-lg overflow-auto max-h-[600px]" id="resume-preview" tabindex="0">
+       <h3 class="text-2xl font-bold text-cyan-400 mb-4">
+        Resume Preview
+       </h3>
+       <div class="prose prose-invert max-w-none" id="preview-content">
+       </div>
+      </section>
+     </div>
+    </div>
+   </section>
+   <!-- Tic Tac Toe Section -->
+   <section class="bg-gray-800 rounded-lg p-6 shadow-lg max-w-md mx-auto" id="tic-tac-toe">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 text-center">
+     Tic Tac Toe - 3D Style
+    </h2>
+    <div class="grid grid-cols-3 gap-4">
+     <div aria-label="Cell 1" class="tic-tac-toe-cell w-24 h-24" data-cell-index="0" role="button" tabindex="0">
+      <div class="tic-tac-toe-inner">
+      </div>
+     </div>
+     <div aria-label="Cell 2" class="tic-tac-toe-cell w-24 h-24" data-cell-index="1" role="button" tabindex="0">
+      <div class="tic-tac-toe-inner">
+      </div>
+     </div>
+     <div aria-label="Cell 3" class="tic-tac-toe-cell w-24 h-24" data-cell-index="2" role="button" tabindex="0">
+      <div class="tic-tac-toe-inner">
+      </div>
+     </div>
+     <div aria-label="Cell 4" class="tic-tac-toe-cell w-24 h-24" data-cell-index="3" role="button" tabindex="0">
+      <div class="tic-tac-toe-inner">
+      </div>
+     </div>
+     <div aria-label="Cell 5" class="tic-tac-toe-cell w-24 h-24" data-cell-index="4" role="button" tabindex="0">
+      <div class="tic-tac-toe-inner">
+      </div>
+     </div>
+     <div aria-label="Cell 6" class="tic-tac-toe-cell w-24 h-24" data-cell-index="5" role="button" tabindex="0">
+      <div class="tic-tac-toe-inner">
+      </div>
+     </div>
+     <div aria-label="Cell 7" class="tic-tac-toe-cell w-24 h-24" data-cell-index="6" role="button" tabindex="0">
+      <div class="tic-tac-toe-inner">
+      </div>
+     </div>
+     <div aria-label="Cell 8" class="tic-tac-toe-cell w-24 h-24" data-cell-index="7" role="button" tabindex="0">
+      <div class="tic-tac-toe-inner">
+      </div>
+     </div>
+     <div aria-label="Cell 9" class="tic-tac-toe-cell w-24 h-24" data-cell-index="8" role="button" tabindex="0">
+      <div class="tic-tac-toe-inner">
+      </div>
+     </div>
+    </div>
+    <div class="mt-6 text-center">
+     <button class="bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-semibold py-2 px-6 rounded-md transition" id="tic-tac-toe-reset">
+      Reset Game
+     </button>
+    </div>
+    <p aria-live="polite" class="mt-4 text-center text-lg font-semibold text-cyan-400" id="tic-tac-toe-status">
+    </p>
+   </section>
+   <!-- Snake Game Section -->
+   <section class="bg-gray-800 rounded-lg p-6 shadow-lg max-w-md mx-auto" id="snake-game">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 text-center">
+     Snake Game - 3D Style with Swipe Controls
+    </h2>
+    <div class="flex justify-center">
+     <canvas aria-label="3D style animated snake game canvas" height="360" id="snake-canvas" role="img" tabindex="0" width="360">
+     </canvas>
+    </div>
+    <div class="mt-6 flex justify-center space-x-4">
+     <button class="bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-semibold py-2 px-6 rounded-md transition" id="snake-start">
+      Start
+     </button>
+     <button class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-2 px-6 rounded-md transition" disabled="" id="snake-pause">
+      Pause
+     </button>
+     <button class="bg-red-600 hover:bg-red-700 text-gray-100 font-semibold py-2 px-6 rounded-md transition" id="snake-reset">
+      Reset
+     </button>
+    </div>
+    <p aria-live="polite" class="mt-4 text-center text-lg font-semibold text-cyan-400" id="snake-score">
+     Score: 0
+    </p>
+   </section>
+  </main>
+  <footer class="bg-gray-800 text-gray-400 text-center py-4 mt-auto">
+   © 2024 Resume Builder &amp; Games. All rights reserved.
+  </footer>
+  <script>
+   // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Resume Builder Logic
+    const templates = document.querySelectorAll('[data-template]');
+    let selectedTemplate = 1;
+    templates.forEach((template) => {
+      template.addEventListener('click', () => {
+        templates.forEach((t) => t.classList.remove('border-cyan-400'));
+        template.classList.add('border-cyan-400');
+        selectedTemplate = template.getAttribute('data-template');
+        generatePreview();
+      });
+      template.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          template.click();
+        }
+      });
+    });
+    // Select first template by default
+    templates[0].classList.add('border-cyan-400');
+
+    const resumeForm = document.getElementById('resume-form');
+    const generateBtn = document.getElementById('generate-resume');
+    const previewContent = document.getElementById('preview-content');
+
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, (m) => {
+        switch (m) {
+          case '&':
+            return '&amp;';
+          case '<':
+            return '&lt;';
+          case '>':
+            return '&gt;';
+          case '"':
+            return '&quot;';
+          case "'":
+            return '&#039;';
+          default:
+            return m;
+        }
+      });
+    }
+
+    function generatePreview() {
+      const formData = new FormData(resumeForm);
+      const fullName = escapeHtml(formData.get('fullName') || '');
+      const email = escapeHtml(formData.get('email') || '');
+      const phone = escapeHtml(formData.get('phone') || '');
+      const linkedin = escapeHtml(formData.get('linkedin') || '');
+      const summary = escapeHtml(formData.get('summary') || '').replace(/\n/g, '<br>');
+      const experience = escapeHtml(formData.get('experience') || '').replace(/\n/g, '<br>');
+      const education = escapeHtml(formData.get('education') || '').replace(/\n/g, '<br>');
+      const skills = escapeHtml(formData.get('skills') || '');
+
+      // Template styling variations (simulate 15 templates with different color schemes and layouts)
+      let templateColor = 'text-cyan-400';
+      let headerBg = 'bg-gray-900';
+      let borderStyle = 'border-b-4 border-cyan-400';
+      let skillStyle = 'bg-cyan-600 text-gray-900 px-2 py-1 rounded inline-block mr-2 mb-2';
+
+      switch (selectedTemplate) {
+        case '1':
+        case '5':
+        case '10':
+        case '14':
+          templateColor = 'text-cyan-400';
+          borderStyle = 'border-b-4 border-cyan-400';
+          skillStyle = 'bg-cyan-600 text-gray-900 px-2 py-1 rounded inline-block mr-2 mb-2';
+          break;
+        case '2':
+        case '6':
+        case '9':
+        case '12':
+          templateColor = 'text-teal-400';
+          borderStyle = 'border-b-4 border-teal-400';
+          skillStyle = 'bg-teal-600 text-gray-900 px-2 py-1 rounded inline-block mr-2 mb-2';
+          break;
+        case '3':
+        case '7':
+        case '11':
+        case '15':
+          templateColor = 'text-red-400';
+          borderStyle = 'border-b-4 border-red-400';
+          skillStyle = 'bg-red-600 text-gray-900 px-2 py-1 rounded inline-block mr-2 mb-2';
+          break;
+        case '4':
+        case '8':
+        case '13':
+          templateColor = 'text-blue-400';
+          borderStyle = 'border-b-4 border-blue-400';
+          skillStyle = 'bg-blue-600 text-gray-900 px-2 py-1 rounded inline-block mr-2 mb-2';
+          break;
+        default:
+          templateColor = 'text-cyan-400';
+          borderStyle = 'border-b-4 border-cyan-400';
+          skillStyle = 'bg-cyan-600 text-gray-900 px-2 py-1 rounded inline-block mr-2 mb-2';
+      }
+
+      // Split skills by comma and trim
+      const skillsArray = skills.split(',').map((s) => s.trim()).filter(Boolean);
+
+      // Build preview HTML
+      const previewHTML = `
+        <div class="p-4 ${headerBg} rounded-lg shadow-lg">
+          <h1 class="text-4xl font-extrabold mb-2 ${templateColor}">${fullName || 'Your Name'}</h1>
+          <div class="flex flex-wrap space-x-4 text-gray-300 mb-4">
+            ${email ? `<div><i class="fas fa-envelope mr-2"></i>${email}</div>` : ''}
+            ${phone ? `<div><i class="fas fa-phone mr-2"></i>${phone}</div>` : ''}
+            ${linkedin ? `<div><i class="fab fa-linkedin mr-2"></i><a href="${linkedin}" target="_blank" rel="noopener noreferrer" class="underline">${linkedin}</a></div>` : ''}
+          </div>
+          <section class="mb-6">
+            <h2 class="text-2xl font-semibold mb-2 ${templateColor} ${borderStyle}">Professional Summary</h2>
+            <p>${summary || 'Add your professional summary here.'}</p>
+          </section>
+          <section class="mb-6">
+            <h2 class="text-2xl font-semibold mb-2 ${templateColor} ${borderStyle}">Work Experience</h2>
+            <p>${experience || 'Add your work experience here.'}</p>
+          </section>
+          <section class="mb-6">
+            <h2 class="text-2xl font-semibold mb-2 ${templateColor} ${borderStyle}">Education</h2>
+            <p>${education || 'Add your education details here.'}</p>
+          </section>
+          <section>
+            <h2 class="text-2xl font-semibold mb-2 ${templateColor} ${borderStyle}">Skills</h2>
+            <div>
+              ${skillsArray.length > 0 ? skillsArray.map(skill => `<span class="${skillStyle}">${skill}</span>`).join('') : '<p>Add your skills here.</p>'}
+            </div>
+          </section>
+        </div>
+      `;
+
+      previewContent.innerHTML = previewHTML;
+    }
+
+    generateBtn.addEventListener('click', () => {
+      generatePreview();
+      previewContent.focus();
+    });
+
+    // Initial preview
+    generatePreview();
+
+    // Tic Tac Toe Logic
+    const ticTacToeCells = document.querySelectorAll('.tic-tac-toe-cell');
+    const ticTacToeStatus = document.getElementById('tic-tac-toe-status');
+    const ticTacToeReset = document.getElementById('tic-tac-toe-reset');
+
+    let ticTacToeBoard = ['', '', '', '', '', '', '', '', ''];
+    let ticTacToeCurrentPlayer = 'X';
+    let ticTacToeGameActive = true;
+
+    const winningConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    function handleCellPlayed(clickedCell, index) {
+      ticTacToeBoard[index] = ticTacToeCurrentPlayer;
+      clickedCell.querySelector('.tic-tac-toe-inner').textContent = ticTacToeCurrentPlayer;
+      clickedCell.querySelector('.tic-tac-toe-inner').classList.add(ticTacToeCurrentPlayer.toLowerCase());
+    }
+
+    function handlePlayerChange() {
+      ticTacToeCurrentPlayer = ticTacToeCurrentPlayer === 'X' ? 'O' : 'X';
+      ticTacToeStatus.textContent = `Player ${ticTacToeCurrentPlayer}'s turn`;
+    }
+
+    function handleResultValidation() {
+      let roundWon = false;
+      for (let i = 0; i < winningConditions.length; i++) {
+        const winCondition = winningConditions[i];
+        const a = ticTacToeBoard[winCondition[0]];
+        const b = ticTacToeBoard[winCondition[1]];
+        const c = ticTacToeBoard[winCondition[2]];
+        if (a === '' || b === '' || c === '') {
+          continue;
+        }
+        if (a === b && b === c) {
+          roundWon = true;
+          break;
+        }
+      }
+
+      if (roundWon) {
+        ticTacToeStatus.textContent = `Player ${ticTacToeCurrentPlayer} has won!`;
+        ticTacToeGameActive = false;
+        return;
+      }
+
+      if (!ticTacToeBoard.includes('')) {
+        ticTacToeStatus.textContent = `Game ended in a draw!`;
+        ticTacToeGameActive = false;
+        return;
+      }
+
+      handlePlayerChange();
+    }
+
+    function handleCellClick(e) {
+      const clickedCell = e.currentTarget;
+      const clickedIndex = parseInt(clickedCell.getAttribute('data-cell-index'));
+
+      if (ticTacToeBoard[clickedIndex] !== '' || !ticTacToeGameActive) {
+        return;
+      }
+
+      handleCellPlayed(clickedCell, clickedIndex);
+      handleResultValidation();
+    }
+
+    function handleCellKeyDown(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        e.currentTarget.click();
+      }
+    }
+
+    function resetGame() {
+      ticTacToeBoard = ['', '', '', '', '', '', '', '', ''];
+      ticTacToeGameActive = true;
+      ticTacToeCurrentPlayer = 'X';
+      ticTacToeStatus.textContent = `Player ${ticTacToeCurrentPlayer}'s turn`;
+      ticTacToeCells.forEach((cell) => {
+        const inner = cell.querySelector('.tic-tac-toe-inner');
+        inner.textContent = '';
+        inner.classList.remove('x', 'o');
+      });
+    }
+
+    ticTacToeCells.forEach((cell) => {
+      cell.addEventListener('click', handleCellClick);
+      cell.addEventListener('keydown', handleCellKeyDown);
+    });
+    ticTacToeReset.addEventListener('click', resetGame);
+
+    resetGame();
+
+    // Snake Game Logic (3D style with animation and swipe controls)
+    const canvas = document.getElementById('snake-canvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('snake-start');
+    const pauseBtn = document.getElementById('snake-pause');
+    const resetBtn = document.getElementById('snake-reset');
+    const scoreDisplay = document.getElementById('snake-score');
+
+    const gridSize = 20;
+    const tileCount = canvas.width / gridSize;
+
+    let snake = [];
+    let velocityX = 0;
+    let velocityY = 0;
+    let food = { x: 0, y: 0 };
+    let score = 0;
+    let gameInterval = null;
+    let gameRunning = false;
+
+    // 3D style colors and shadows for snake and food
+    function draw3DRect(x, y, size, color) {
+      // Draw base rectangle with gradient for 3D effect
+      const gradient = ctx.createLinearGradient(x, y, x + size, y + size);
+      gradient.addColorStop(0, color);
+      gradient.addColorStop(1, '#000000');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(x, y, size, size);
+
+      // Draw top highlight
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + size, y);
+      ctx.lineTo(x + size - 4, y + 4);
+      ctx.lineTo(x + 4, y + 4);
+      ctx.closePath();
+      ctx.fill();
+
+      // Draw left highlight
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + 4, y + 4);
+      ctx.lineTo(x + 4, y + size - 4);
+      ctx.lineTo(x, y + size);
+      ctx.closePath();
+      ctx.fill();
+
+      // Draw shadow on bottom and right
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.beginPath();
+      ctx.moveTo(x + size, y);
+      ctx.lineTo(x + size, y + size);
+      ctx.lineTo(x + size - 4, y + size - 4);
+      ctx.lineTo(x + size - 4, y + 4);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(x, y + size);
+      ctx.lineTo(x + size, y + size);
+      ctx.lineTo(x + size - 4, y + size - 4);
+      ctx.lineTo(x + 4, y + size - 4);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function resetGameState() {
+      snake = [
+        { x: 10, y: 10 },
+        { x: 9, y: 10 },
+        { x: 8, y: 10 },
+      ];
+      velocityX = 1;
+      velocityY = 0;
+      placeFood();
+      score = 0;
+      scoreDisplay.textContent = `Score: ${score}`;
+      gameRunning = false;
+      pauseBtn.disabled = true;
+      startBtn.disabled = false;
+    }
+
+    function placeFood() {
+      food.x = Math.floor(Math.random() * tileCount);
+      food.y = Math.floor(Math.random() * tileCount);
+
+      // Ensure food is not placed on the snake
+      while (snake.some((segment) => segment.x === food.x && segment.y === food.y)) {
+        food.x = Math.floor(Math.random() * tileCount);
+        food.y = Math.floor(Math.random() * tileCount);
+      }
+    }
+
+    function gameLoop() {
+      if (!gameRunning) return;
+
+      // Move snake
+      const head = { x: snake[0].x + velocityX, y: snake[0].y + velocityY };
+
+      // Wrap around edges
+      if (head.x < 0) head.x = tileCount - 1;
+      if (head.x >= tileCount) head.x = 0;
+      if (head.y < 0) head.y = tileCount - 1;
+      if (head.y >= tileCount) head.y = 0;
+
+      // Check collision with self
+      if (snake.some((segment) => segment.x === head.x && segment.y === head.y)) {
+        gameOver();
+        return;
+      }
+
+      snake.unshift(head);
+
+      // Check if food eaten
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        scoreDisplay.textContent = `Score: ${score}`;
+        placeFood();
+      } else {
+        snake.pop();
+      }
+
+      drawGame();
+    }
+
+    function drawGame() {
+      // Background gradient for extra style
+      const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      bgGradient.addColorStop(0, '#0f2027');
+      bgGradient.addColorStop(0.5, '#203a43');
+      bgGradient.addColorStop(1, '#2c5364');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw food with 3D style (bright red with glow)
+      ctx.shadowColor = '#ff4d4d';
+      ctx.shadowBlur = 15;
+      draw3DRect(food.x * gridSize, food.y * gridSize, gridSize, '#ff4d4d');
+      ctx.shadowBlur = 0;
+
+      // Draw snake with gradient 3D style (neon green shades with glow)
+      snake.forEach((segment, index) => {
+        const lightness = 40 + index * 4;
+        const color = `hsl(140, 90%, ${lightness}%)`;
+        ctx.shadowColor = 'limegreen';
+        ctx.shadowBlur = 10;
+        draw3DRect(segment.x * gridSize, segment.y * gridSize, gridSize, color);
+        ctx.shadowBlur = 0;
+      });
+    }
+
+    function gameOver() {
+      gameRunning = false;
+      pauseBtn.disabled = true;
+      startBtn.disabled = false;
+      alert('Game Over! Your score: ' + score);
+    }
+
+    // Swipe controls for mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    const minSwipeDistance = 30;
+
+    function handleSwipe() {
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+      if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) return;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        if (deltaX > 0 && velocityX !== -1) {
+          velocityX = 1;
+          velocityY = 0;
+        } else if (deltaX < 0 && velocityX !== 1) {
+          velocityX = -1;
+          velocityY = 0;
+        }
+      } else {
+        // Vertical swipe
+        if (deltaY > 0 && velocityY !== -1) {
+          velocityX = 0;
+          velocityY = 1;
+        } else if (deltaY < 0 && velocityY !== 1) {
+          velocityX = 0;
+          velocityY = -1;
+        }
+      }
+    }
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (!gameRunning) return;
+      const touch = e.changedTouches[0];
+      touchStartX = touch.screenX;
+      touchStartY = touch.screenY;
+    }, {passive: true});
+
+    canvas.addEventListener('touchend', (e) => {
+      if (!gameRunning) return;
+      const touch = e.changedTouches[0];
+      touchEndX = touch.screenX;
+      touchEndY = touch.screenY;
+      handleSwipe();
+    }, {passive: true});
+
+    // Keyboard controls
+    function changeDirection(e) {
+      if (!gameRunning) return;
+      switch (e.key) {
+        case 'ArrowUp':
+          if (velocityY === 1) break;
+          velocityX = 0;
+          velocityY = -1;
+          break;
+        case 'ArrowDown':
+          if (velocityY === -1) break;
+          velocityX = 0;
+          velocityY = 1;
+          break;
+        case 'ArrowLeft':
+          if (velocityX === 1) break;
+          velocityX = -1;
+          velocityY = 0;
+          break;
+        case 'ArrowRight':
+          if (velocityX === -1) break;
+          velocityX = 1;
+          velocityY = 0;
+          break;
+      }
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (!gameRunning) {
+        gameRunning = true;
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        gameInterval = setInterval(gameLoop, 100);
+      }
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      if (gameRunning) {
+        gameRunning = false;
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+        clearInterval(gameInterval);
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      gameRunning = false;
+      clearInterval(gameInterval);
+      resetGameState();
+      drawGame();
+    });
+
+    window.addEventListener('keydown', changeDirection);
+
+    resetGameState();
+    drawGame();
+  </script>
+ </body>
+</html>
